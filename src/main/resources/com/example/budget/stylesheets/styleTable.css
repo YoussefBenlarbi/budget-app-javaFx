@@ -1,0 +1,13 @@
+/*.main-pane {*/
+/*    -fx-background-color: #f0f0f0; !* Light gray background *!*/
+/*}*/
+
+/*.table-view {*/
+/*    !*-fx-background-color: grey; !* Use 'grey' instead of 'gray' for consistency *!*!*/
+/*}*/
+
+.table-view .column-header,
+.table-view .table-cell {
+    -fx-border-width: 0.5px;
+    -fx-alignment: center; /* Center-align text */
+}

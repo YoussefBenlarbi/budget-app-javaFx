@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.budget.Controller.EditFormController">
+    <children>
+        <Text layoutX="82.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Expense : ">
+            <font>
+                <Font size="25.0"/>
+            </font>
+        </Text>
+        <TextField fx:id="expenseIdField" layoutX="100.0" layoutY="106.0" prefHeight="26.0" prefWidth="175.0" editable="false"/>
+        <TextField fx:id="userIdField" layoutX="100.0" layoutY="158.0" prefHeight="26.0" prefWidth="175.0"/>
+        <TextField fx:id="amountField" layoutX="99.0" layoutY="206.0" prefHeight="26.0" prefWidth="175.0"/>
+        <TextField fx:id="categoryIdField" layoutX="99.0" layoutY="256.0" prefHeight="26.0" prefWidth="175.0"/>
+        <TextField fx:id="dateField" layoutX="95.0" layoutY="308.0" prefHeight="26.0" prefWidth="175.0"/>
+        <Text layoutX="108.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Expense id -"/>
+        <Text layoutX="109.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- User ID -"/>
+        <Text layoutX="107.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Amount -"/>
+        <Text layoutX="105.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Category ID -"/>
+        <Text layoutX="108.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Date -"/>
+        <Button layoutX="200.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleSave" text="Save" />
+    </children>
+</AnchorPane>
