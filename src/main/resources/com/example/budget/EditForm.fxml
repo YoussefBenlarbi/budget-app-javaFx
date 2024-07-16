@@ -4,7 +4,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Button?>
-<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane  prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.budget.Controller.EditFormController">
     <children>
         <Text layoutX="82.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Expense : ">

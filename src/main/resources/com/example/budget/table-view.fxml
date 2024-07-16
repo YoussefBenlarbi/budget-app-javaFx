@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import java.net.URL?>
 
-<AnchorPane prefHeight="600.0" prefWidth="550.0" style="-fx-background-color: #F5F5F5;"
-            xmlns="http://javafx.com/javafx/22"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.budget.Controller.TableViewController"
-            styleClass="main-pane">
-
+<AnchorPane prefWidth="700.0" prefHeight="300.00" style="-fx-background-color: #F5F5F5;"  xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budget.Controller.TableViewController">
     <stylesheets>
         <URL value="@stylesheets/styleTable.css" />
     </stylesheets>
 
-    <TableView fx:id="tableV" prefWidth="480.0">
+    <TableView fx:id="tableV" layoutX="50.0" layoutY="50.0" prefHeight="500.0" prefWidth="1000.0">
         <columns>
             <TableColumn fx:id="expense_id" prefWidth="70.0" text="Expense Id" />
             <TableColumn fx:id="user_id" prefWidth="70.0" text="User Id" />
             <TableColumn fx:id="amount" prefWidth="70.0" text="Amount" />
             <TableColumn fx:id="category_id" prefWidth="70.0" text="Category" />
             <TableColumn fx:id="date" prefWidth="120.0" text="Date" />
-            <TableColumn fx:id="actions" text="Actions" />
+            <TableColumn fx:id="actions" prefWidth="100.0" text="Actions" />
         </columns>
     </TableView>
-
 </AnchorPane>

@@ -1,8 +1,10 @@
 package com.example.budget.Controller;
 
 import com.example.budget.Entity.Expense;
+import com.example.budget.Entity.User;
 import com.example.budget.Repository.ExpenseRepository;
 import com.example.budget.utils.DbConnect;
+import com.example.budget.utils.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +12,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +33,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class TableViewController implements Initializable {
+    public PieChart pieChart;
+    public BarChart barChart;
     @FXML
     private TableView<Expense> tableV;
     @FXML
@@ -44,14 +51,21 @@ public class TableViewController implements Initializable {
     private TableColumn<Expense, Void> actions;
 
     private ExpenseRepository expenseRepository = new ExpenseRepository();
-
     private ObservableList<Expense> listExpense = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeColumns();
         setupActionsColumn();
-        loadData();
+        loadDataForCurrentUser();
+        User currentUser = UserSession.getInstance().getUser();
+        if (currentUser == null) {
+            showErrorAlert("Authentication Error", "No user logged in. Please log in first.");
+            return;
+        }
+
+        populatePieChart(currentUser);
+        populateBarChart(currentUser);
     }
 
     private void initializeColumns() {
@@ -69,50 +83,33 @@ public class TableViewController implements Initializable {
 
     @FXML
     private void refreshTable() {
-        loadData();
+        loadDataForCurrentUser();
     }
 
-    @FXML
-    private void editExpense() {
-        Expense selectedExpense = tableV.getSelectionModel().getSelectedItem();
-        if (selectedExpense != null) {
-            // Implement edit functionality using selectedExpense.getId()
-            System.out.println("Editing expense with ID: " + selectedExpense.getId());
-        } else {
-            showErrorAlert("Selection Error", "Please select an expense to edit.");
+    private void loadDataForCurrentUser() {
+        User currentUser = UserSession.getInstance().getUser();
+        if (currentUser == null) {
+            showErrorAlert("Authentication Error", "No user logged in. Please log in first.");
+            return;
         }
-    }
 
-    @FXML
-    private void deleteExpense() {
-        Expense selectedExpense = tableV.getSelectionModel().getSelectedItem();
-        if (selectedExpense != null) {
-            int expenseId = selectedExpense.getId();
-            // Implement delete functionality using expenseId
-            System.out.println("Deleting expense with ID: " + expenseId);
-            // Remove from list and update table
-            listExpense.remove(selectedExpense);
-        } else {
-            showErrorAlert("Selection Error", "Please select an expense to delete.");
-        }
-    }
-
-    private void loadData() {
         listExpense.clear();
-        String query = "SELECT * FROM expenses";
+        String query = "SELECT * FROM expenses WHERE user_id = ?";
 
         try (Connection connection = DbConnect.getConnect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            while (resultSet.next()) {
-                listExpense.add(new Expense(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("user_id"),
-                        resultSet.getDouble("amount"),
-                        resultSet.getString("date"),
-                        resultSet.getInt("category_id")
-                ));
+            preparedStatement.setInt(1, currentUser.getId());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    listExpense.add(new Expense(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("user_id"),
+                            resultSet.getDouble("amount"),
+                            resultSet.getString("date"),
+                            resultSet.getInt("category_id")
+                    ));
+                }
             }
             tableV.setItems(listExpense);
         } catch (SQLException e) {
@@ -120,7 +117,6 @@ public class TableViewController implements Initializable {
             showErrorAlert("Database Error", "Failed to load data from the database.");
         }
     }
-
 
     private void setupActionsColumn() {
         actions.setCellFactory(param -> new TableCell<>() {
@@ -135,7 +131,6 @@ public class TableViewController implements Initializable {
                 });
 
                 deleteIcon.getStyleClass().add("delete-icon");
-//                deleteIcon.setStyle("-fx-fill: red; -fx-font-size: 20px;");
                 deleteIcon.setOnMouseClicked(event -> {
                     Expense expense = getTableView().getItems().get(getIndex());
                     deleteExpense(expense);
@@ -167,22 +162,43 @@ public class TableViewController implements Initializable {
             stage.setTitle("Edit Expense");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
+
+            // Set up a listener for when the stage is closed
+            stage.setOnHidden(event -> {
+                refreshTable();
+                updateCharts();
+            });
+
             stage.showAndWait();
 
-            // Refresh the table after editing
-            refreshTable();
         } catch (IOException e) {
             e.printStackTrace();
+            showErrorAlert("Error", "Failed to open edit form.");
+        }
+    }
+
+    private void updateCharts() {
+        User currentUser = UserSession.getInstance().getUser();
+        if (currentUser != null) {
+            populatePieChart(currentUser);
+            populateBarChart(currentUser);
         }
     }
 
     private void deleteExpense(Expense expense) {
-        // Implement delete functionality
-        System.out.println("Deleting expense with ID: " + expense.getId());
-        expenseRepository.delete(expense);
-        System.out.println("Expense having  id = "+expense.getId()+ " is deleted successfully.");
-        listExpense.remove(expense);
-        tableV.refresh();
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirm Delete");
+        confirmAlert.setHeaderText("Delete Expense");
+        confirmAlert.setContentText("Are you sure you want to delete this expense?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                expenseRepository.delete(expense);
+                listExpense.remove(expense);
+                tableV.refresh();
+                System.out.println("Expense with id = " + expense.getId() + " deleted successfully.");
+            }
+        });
     }
 
     private void showErrorAlert(String title, String message) {
@@ -192,4 +208,58 @@ public class TableViewController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void populatePieChart(User currentUser) {
+        String query = "SELECT c.name, SUM(e.amount) as total FROM expenses e " +
+                "JOIN categories c ON e.category_id = c.id " +
+                "WHERE e.user_id = ? GROUP BY c.id, c.name";
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        try (Connection connection = DbConnect.getConnect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, currentUser.getId());
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                pieChartData.add(new PieChart.Data(rs.getString("name"), rs.getDouble("total")));
+            }
+
+            pieChart.setData(pieChartData);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Database Error", "Failed to fetch pie chart data from the database.");
+        }
+    }
+
+    private void populateBarChart(User currentUser) {
+        String query = "SELECT DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as total " +
+                "FROM expenses WHERE user_id = ? " +
+                "GROUP BY DATE_FORMAT(date, '%Y-%m') " +
+                "ORDER BY month DESC LIMIT 6";
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Monthly Expenses");
+
+        try (Connection connection = DbConnect.getConnect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, currentUser.getId());
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                series.getData().add(new XYChart.Data<>(rs.getString("month"), rs.getDouble("total")));
+            }
+
+            ObservableList<XYChart.Series<String, Number>> barChartData = FXCollections.observableArrayList(series);
+            barChart.setData(barChartData);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Database Error", "Failed to fetch bar chart data from the database.");
+        }
+    }
+
+
 }

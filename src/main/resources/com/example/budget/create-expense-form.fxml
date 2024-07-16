@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane  prefWidth="380.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.budget.Controller.CreateExpenseFormController" style="-fx-background-color: white; -fx-border-color: #F5F5F5; -fx-background-radius: 2px;">
+    <children>
+        <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Expense">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Text>
+
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Amount"/>
+                <TextField fx:id="amountField" prefWidth="340.0" promptText="Enter amount"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category"/>
+                <ComboBox fx:id="categoryComboBox" prefWidth="340.0" promptText="Select category"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date"/>
+                <DatePicker fx:id="datePicker" prefWidth="340.0"/>
+            </VBox>
+<!--            <VBox spacing="5">-->
+<!--                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description (Optional)"/>-->
+<!--                <TextField fx:id="descriptionField" prefWidth="340.0" promptText="Enter description"/>-->
+<!--            </VBox>-->
+            <Button mnemonicParsing="false" onAction="#handleAddExpense" text="Add Expense" />
+        </VBox>
+    </children>
+</AnchorPane>

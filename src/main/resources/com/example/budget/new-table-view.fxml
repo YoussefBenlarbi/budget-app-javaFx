@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+    <VBox HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.example.budget.Controller.TableViewController"
+          prefHeight="400.0" prefWidth="600.0">
+        <TableView fx:id="tableV" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="expense_id" prefWidth="70.0" text="Expense Id" />
+                <TableColumn fx:id="user_id" prefWidth="70.0" text="User Id" />
+                <TableColumn fx:id="amount" prefWidth="70.0" text="Amount" />
+                <TableColumn fx:id="category_id" prefWidth="70.0" text="Category" />
+                <TableColumn fx:id="date" prefWidth="120.0" text="Date" />
+                <TableColumn fx:id="actions" prefWidth="100.0" text="Actions" />
+            </columns>
+        </TableView>
+    </VBox>
+
