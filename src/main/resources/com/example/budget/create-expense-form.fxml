@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 
 <AnchorPane  prefWidth="380.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.budget.Controller.CreateExpenseFormController" style="-fx-background-color: white; -fx-border-color: #F5F5F5; -fx-background-radius: 2px;">
+            fx:controller="com.example.budget.Controller.CreateExpenseFormController" style="-fx-background-color: #F5F5F5 ; -fx-border-color: #F5F5F5; -fx-background-radius: 2px;">
     <children>
         <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <padding>

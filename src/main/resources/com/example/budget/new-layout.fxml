@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.BarChart?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budget.Controller.TableViewController">
 
@@ -20,11 +20,11 @@
         </AnchorPane>
 
         <!-- Charts Section -->
-        <HBox spacing="20" prefHeight="380.0" maxWidth="1200.0">
-            <!-- PieChart -->
-            <PieChart fx:id="pieChart" prefWidth="580.0" HBox.hgrow="ALWAYS"/>
-            <!-- BarChart -->
-            <BarChart fx:id="barChart" prefWidth="580.0" HBox.hgrow="ALWAYS">
+        <HBox maxWidth="1200.0" prefHeight="400.0" spacing="20">
+            <!-- PieChart (enlarged) -->
+            <PieChart fx:id="pieChart" prefHeight="400.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
+            <!-- BarChart (slightly reduced) -->
+            <BarChart fx:id="barChart" prefHeight="188.0" prefWidth="616.0" HBox.hgrow="ALWAYS">
                 <xAxis>
                     <CategoryAxis side="BOTTOM" />
                 </xAxis>
@@ -49,7 +49,6 @@
                     </columns>
                 </TableView>
             </VBox>
-<!--                <fx:include source="new-table-view.fxml" />-->
 
             <AnchorPane prefWidth="380.0">
                 <fx:include source="create-expense-form.fxml" />

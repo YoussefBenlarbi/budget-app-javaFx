@@ -49,15 +49,23 @@ public class TableViewController implements Initializable {
     private TableColumn<Expense, String> date;
     @FXML
     private TableColumn<Expense, Void> actions;
-
+    private static TableViewController instance;
     private ExpenseRepository expenseRepository = new ExpenseRepository();
     private ObservableList<Expense> listExpense = FXCollections.observableArrayList();
 
+    public TableViewController() {
+        instance = this; // Store the instance when created
+    }
+    public static TableViewController getInstance() {
+        return instance;
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeColumns();
         setupActionsColumn();
         loadDataForCurrentUser();
+        pieChart.setPrefSize(780, 400);
+        barChart.setPrefSize(380, 400);
         User currentUser = UserSession.getInstance().getUser();
         if (currentUser == null) {
             showErrorAlert("Authentication Error", "No user logged in. Please log in first.");
@@ -66,6 +74,7 @@ public class TableViewController implements Initializable {
 
         populatePieChart(currentUser);
         populateBarChart(currentUser);
+
     }
 
     private void initializeColumns() {
@@ -82,7 +91,7 @@ public class TableViewController implements Initializable {
     }
 
     @FXML
-    private void refreshTable() {
+    void refreshTable() {
         loadDataForCurrentUser();
     }
 
@@ -134,6 +143,7 @@ public class TableViewController implements Initializable {
                 deleteIcon.setOnMouseClicked(event -> {
                     Expense expense = getTableView().getItems().get(getIndex());
                     deleteExpense(expense);
+
                 });
             }
 
@@ -162,7 +172,10 @@ public class TableViewController implements Initializable {
             stage.setTitle("Edit Expense");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-
+            StatsController statsController = StatsController.getInstance();
+            if (statsController != null) {
+                statsController.refreshStats();
+            }
             // Set up a listener for when the stage is closed
             stage.setOnHidden(event -> {
                 refreshTable();
@@ -183,6 +196,10 @@ public class TableViewController implements Initializable {
             populatePieChart(currentUser);
             populateBarChart(currentUser);
         }
+        StatsController statsController = StatsController.getInstance();
+        if (statsController != null) {
+            statsController.refreshStats();
+        }
     }
 
     private void deleteExpense(Expense expense) {
@@ -192,11 +209,17 @@ public class TableViewController implements Initializable {
         confirmAlert.setContentText("Are you sure you want to delete this expense?");
 
         confirmAlert.showAndWait().ifPresent(response -> {
+            StatsController statsController = StatsController.getInstance();
+
             if (response == ButtonType.OK) {
                 expenseRepository.delete(expense);
                 listExpense.remove(expense);
                 tableV.refresh();
                 System.out.println("Expense with id = " + expense.getId() + " deleted successfully.");
+                updateCharts();
+                if (statsController != null) {
+                    statsController.refreshStats();
+                }
             }
         });
     }
