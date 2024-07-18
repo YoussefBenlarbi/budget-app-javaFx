@@ -7,6 +7,7 @@ import com.example.budget.utils.DbConnect;
 import com.example.budget.utils.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +36,7 @@ import java.util.ResourceBundle;
 public class TableViewController implements Initializable {
     public PieChart pieChart;
     public BarChart barChart;
+    public Button open_balance_form;
     @FXML
     private TableView<Expense> tableV;
     @FXML
@@ -93,6 +95,14 @@ public class TableViewController implements Initializable {
     @FXML
     void refreshTable() {
         loadDataForCurrentUser();
+        User currentUser = UserSession.getInstance().getUser();
+        if (currentUser == null) {
+            showErrorAlert("Authentication Error", "No user logged in. Please log in first.");
+            return;
+        }
+
+        populatePieChart(currentUser);
+        populateBarChart(currentUser);
     }
 
     private void loadDataForCurrentUser() {
@@ -285,4 +295,20 @@ public class TableViewController implements Initializable {
     }
 
 
+    public void openBalance(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budget/add-balance.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Balance Form");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to open balance form.");
+        }
+    }
 }

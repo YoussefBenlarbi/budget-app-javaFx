@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budget.Controller.TableViewController">
 
     <VBox spacing="20" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
@@ -53,6 +54,11 @@
             <AnchorPane prefWidth="380.0">
                 <fx:include source="create-expense-form.fxml" />
             </AnchorPane>
+
         </HBox>
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <Button fx:id="open_balance_form" text="Deposit Amount" onAction="#openBalance"/>
+        </HBox>
+
     </VBox>
 </AnchorPane>

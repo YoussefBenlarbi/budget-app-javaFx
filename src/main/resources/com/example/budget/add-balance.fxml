@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.budget.Controller.AddBalanceController"
+            prefHeight="400.0" prefWidth="400.0">
+    <children>
+        <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Balance">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Text>
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Amount"/>
+                <TextField fx:id="amountField" prefWidth="340.0" promptText="Enter amount"/>
+            </VBox>
+            <Button mnemonicParsing="false" onAction="#handleAddBalance" text="Add Balance"/>
+        </VBox>
+    </children>
+
+</AnchorPane>

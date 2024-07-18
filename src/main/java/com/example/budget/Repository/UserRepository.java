@@ -169,59 +169,65 @@ public class UserRepository {
 //        return user;
 //    }
     //TODO Register method to register a new user .
-//    public boolean register(User user) {
-//        // First, check if the username or email already exists
-//        if (isUsernameTaken(user.getUsername()) || isEmailTaken(user.getEmail())) {
-//            return false;
-//        }
-//
-//        // If username and email are available, proceed with registration
-//        String insertUserSQL = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-//        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-//             PreparedStatement preparedStatement = conn.prepareStatement(insertUserSQL)) {
-//
-//            preparedStatement.setString(1, user.getUsername());
-//            preparedStatement.setString(2, hashPassword(user.getPassword()));
-//            preparedStatement.setString(3, user.getEmail());
-//
-//            int affectedRows = preparedStatement.executeUpdate();
-//            return affectedRows > 0;
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            // Consider logging the error or throwing a custom exception
-//            return false;
-//        }
-//    }
+    public boolean register(User user) {
+        // First, check if the username or email already exists
+        if (isUsernameTaken(user.getUsername()) || isEmailTaken(user.getEmail())) {
+            return false;
+        }
+
+        // If username and email are available, proceed with registration
+        String insertUserSQL = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        try (Connection conn = DbConnect.getConnect();
+             PreparedStatement preparedStatement = conn.prepareStatement(insertUserSQL)) {
+
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getEmail());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Consider logging the error or throwing a custom exception
+            return false;
+        }
+    }
 //
     // TODO method to check if the username or email already exists .
-//    private boolean isUsernameTaken(String username) {
-//        String checkUsernameSQL = "SELECT COUNT(*) FROM users WHERE username = ?";
-//        return checkIfExists(checkUsernameSQL, username);
-//    }
+    private boolean isUsernameTaken(String username) {
+        String checkUsernameSQL = "SELECT COUNT(*) FROM users WHERE username = ?";
+        return checkIfExists(checkUsernameSQL, username);
+    }
 
     //TODO method to check if the username or email already exists.
 
-//    private boolean isEmailTaken(String email) {
-//        String checkEmailSQL = "SELECT COUNT(*) FROM users WHERE email = ?";
-//        return checkIfExists(checkEmailSQL, email);
-//    }
+    private boolean isEmailTaken(String email) {
+        String checkEmailSQL = "SELECT COUNT(*) FROM users WHERE email = ?";
+        return checkIfExists(checkEmailSQL, email);
+    }
 //
     //TODO method to check if the username or email already exists .
-//    private boolean checkIfExists(String sql, String parameter) {
-//        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-//             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-//
-//            preparedStatement.setString(1, parameter);
-//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    return resultSet.getInt(1) > 0;
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            // Consider logging the error or throwing a custom exception
-//        }
-//        return false;
-//    }
+    private boolean checkIfExists(String sql, String parameter) {
+        try (Connection conn = DbConnect.getConnect();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, parameter);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean isAnEmail(String email) {
+        return email.contains("@") && email.contains(".");
+    }
+    public boolean isAPassword(String password) {
+        return password.length() >= 8;
+    }
+
 }

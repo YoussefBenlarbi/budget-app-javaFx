@@ -97,10 +97,12 @@ public class CreateExpenseFormController {
                 // Get the instance of TableViewController and refresh the table
                 TableViewController tableViewController = TableViewController.getInstance();
                 if (tableViewController != null) {
+                    System.out.println("Refreshing table");
                     tableViewController.refreshTable();
                 }
                 StatsController statsController = StatsController.getInstance();
                 if (statsController != null) {
+                    System.out.println("Refreshing Stats");
                     statsController.refreshStats();
                 }
             } else {

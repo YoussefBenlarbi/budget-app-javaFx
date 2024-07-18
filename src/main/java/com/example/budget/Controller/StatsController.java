@@ -46,10 +46,15 @@ public class StatsController implements Initializable {
         int housingAndFood = getHousingAndFood();
         int transportationAndUtilities = getTransportationAndUtilities();
 
-        if (currentBalance != null) {
-            // Format the balance to two decimal places
-            String formattedBalance = String.format("%.2f", currentBalance);
-            totalBalance.setText(formattedBalance);
+        if (currentBalance != null && totalExpenses != null) {
+            double difference = currentBalance - totalExpenses;
+            if (difference < 0) {
+                totalBalance.setText("0.00");
+            } else {
+                // Format the difference to two decimal places
+                String formattedDifference = String.format("%.2f", difference);
+                totalBalance.setText(formattedDifference);
+            }
         } else {
             totalBalance.setText("N/A");
         }
